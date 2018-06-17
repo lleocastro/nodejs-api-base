@@ -16,8 +16,7 @@ module.exports = (app) => {
     res.status(status).jsonp({
       status: status,
       server_date: new Date(),
-      errors: errors || [],
-      body: req.body || null
+      errors: errors || []
     });
   }
 

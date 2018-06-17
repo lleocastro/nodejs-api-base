@@ -28,6 +28,12 @@ module.exports = (app) => {
       .catch((err) => httpUtils.errorHandler(req, res, [err]));
   });
 
+  app.put('/v1/users/password_update', auth.authenticate(), (req, res) => {
+    userController.passwordUpdate(req.body)
+      .then((data) => httpUtils.successHandler(req, res, data))
+      .catch((err) => httpUtils.errorHandler(req, res, [err]));
+  });
+
   app.delete('/v1/users/:id', auth.authenticate(), (req, res) => {
     userController.delete(escape(req.params.id))
       .then((data) => httpUtils.successHandler(req, res, data))
