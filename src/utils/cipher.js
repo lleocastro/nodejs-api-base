@@ -4,7 +4,7 @@ const cryptoJS = require('crypto-js');
 const moment = require('moment');
 
 module.exports = () => {
-  let key = 'hahahahaha';
+  let key = process.env.APP_KEY;
 
   this.obscure = (text) => {
     var cipherText = cryptoJS.AES.encrypt(

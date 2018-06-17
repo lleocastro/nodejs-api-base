@@ -5,7 +5,7 @@ const ExtractJwt = passportJWT.ExtractJwt;
 const Strategy = passportJWT.Strategy;
 
 const config = {
-  jwtSecret: 'MyS3cr3tK3Y',
+  jwtSecret: process.env.APP_KEY,
   jwtSession: {session: false}
 };
 

@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 
 module.exports = () => {
   let conData = {
-    host: '//127.0.0.1',
-    port: 27017,
-    username: '',
-    password: '',
-    database: 'base_test_api',
-    driver: 'mongodb'
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    username: process.env.DB_USER || '',
+    password: process.env.DB_PASS || '',
+    database: process.env.DB_NAME,
+    driver: process.env.DB_DRIVER
   };
 
   let options = {
@@ -21,7 +21,7 @@ module.exports = () => {
     bufferMaxEntries: 0
   };
 
-  let url = `${conData.driver}:${conData.host}:${conData.port}/${conData.database}`;
+  let url = `${conData.driver}://${conData.host}:${conData.port}/${conData.database}`;
 
   let db = mongoose.connect(url, options).then(() => {
     console.info('mongodb: Is connected!!');

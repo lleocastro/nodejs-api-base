@@ -1,5 +1,8 @@
 'use strict';
 
+// LOAD ENV
+require('dotenv').config();
+
 // External Libs
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -11,10 +14,7 @@ const helmet = require('helmet');
 // Node Core
 const evt = require('events').EventEmitter();
 
-
-/**
- * MONGODB SINGLE CONNECTION
- */
+// MongoDB Connection
 require('./database')();
 
 module.exports = () => {
