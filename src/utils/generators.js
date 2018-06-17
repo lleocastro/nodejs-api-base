@@ -32,9 +32,9 @@ module.exports = () => {
   }
 
   /**
-   * Invite Code Generator
+   * Code Generator
    */
-  this.inviteCode = () => {
+  this.code5 = () => {
     return new Buffer(
       Math.floor(((1 + Math.random()) * 99999) * 0x10000).toString(23).substring(1)
     ).toString('base64').replace(/==/gi, '');

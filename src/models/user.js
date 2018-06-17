@@ -1,10 +1,13 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt-nodejs');
 
 const userSchema = new mongoose.Schema({
-  user_id: Number,
-  name: String,
+  first_name: String,
+  last_name: String,
+  email: String,
+  password: String,
   created_at: {type: Date, default: new Date()},
   updated_at: {type: Date, default: new Date()}
 });
@@ -12,36 +15,47 @@ const userSchema = new mongoose.Schema({
 module.exports = () => {
   let User = mongoose.model('User', userSchema);
 
-  /** */
-  this.getAll = () => {
-    return User.find({});
-  }
+  this.getAll = (callback) => {
+    User.find({}, (err, docs) => {
+      callback(err, docs);
+    });
+  };
 
-  /** */
   this.findById = (userId, callback) => {
-    return User.find({user_id: {$gte: userId}});
-  }
+    User.find({_id: {$eq: userId}}, (err, docs) => {
+      callback(err, docs);
+    });
+  };
 
-  /** */
+  this.findByEmail = (userEmail, callback) => {
+    User.find({email: {$eq: userEmail}}, (err, docs) => {
+      callback(err, docs);
+    });
+  };
+
   this.save = (user, callback) => {
-    user.user_id = Math.floor(Math.random() * 99999);
+    if (user.password) {
+      user.password = bcrypt.hashSync(user.password);
+    }
+
     new User(user).save((err) => callback(err));
     return user;
-  }
+  };
 
-  /** */
   this.edit = (user, callback) => {
     user.updated_at = new Date();
-    //...
-  }
+    
+    let id = user._id;
+    delete user._id;
 
-  /** */
+    User.update({_id: id}, { $set: user}, (err, docs) => callback(err, docs));
+    return user;
+  };
+
   this.destroy = (userId, callback) => {
-    new User.remove({user_id: {$gte: userId}}, (err) => callback(err));
+    User.remove({_id: {$eq: userId}}, (err) => callback(err));
     return userId;
-  }
-
-  //...
-
+  };
+  
   return this;
 }

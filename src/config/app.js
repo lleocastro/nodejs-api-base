@@ -3,6 +3,7 @@
 // External Libs
 const express = require('express');
 const bodyParser = require('body-parser');
+const auth = require("../config/auth")();
 const validator  = require('express-validator');
 const consign = require('consign');
 const helmet = require('helmet');
@@ -12,7 +13,7 @@ const evt = require('events').EventEmitter();
 
 
 /**
- * MONGODB CONNECTION
+ * MONGODB SINGLE CONNECTION
  */
 require('./database')();
 
@@ -22,6 +23,7 @@ module.exports = () => {
   // Loading external modules
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
+  app.use(auth.initialize());
   app.use(validator());
   app.use(helmet());
 

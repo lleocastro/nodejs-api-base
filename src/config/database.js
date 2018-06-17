@@ -8,7 +8,7 @@ module.exports = () => {
     port: 27017,
     username: '',
     password: '',
-    database: 'haapp_haapp',
+    database: 'base_test_api',
     driver: 'mongodb'
   };
 
