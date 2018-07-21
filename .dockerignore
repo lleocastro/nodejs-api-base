@@ -1,0 +1,6 @@
+.git/**
+tests/**
+.vscode/**
+node_modules/**
+.env.example
+.gitignore
