@@ -16,10 +16,10 @@ module.exports = () => {
   };
 
   let strategy = new Strategy(params, (payload, done) => {
-    let id = payload.id || null;
+    let id = payload.user._id || null;
 
     if (id) {
-      return done(null, {id: id});
+      return done(null, payload.user);
     } else {
       return done(new Error('user_not_found'), null);
     }

@@ -13,9 +13,9 @@ module.exports = () => {
       userModel.findByEmail(payload.email, (err, docs) => {
 
         if (docs[0] && bcrypt.compareSync(payload.password, docs[0].password)) {
-          resolve(jwt.encode({id: docs[0]._id}, authConfig.jwtSecret));
+          resolve(jwt.encode({user: docs[0]}, authConfig.jwtSecret));
         } else {
-          reject('email or password incorrect! ');
+          reject('email or password incorrect! ', err);
         }
 
       });

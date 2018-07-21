@@ -37,6 +37,7 @@
     "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
-    "jasmine": "^3.1.0"
+    "jasmine": "^3.1.0",
+    "supertest": "^3.1.0"
   }
 }
