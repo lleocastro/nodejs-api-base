@@ -2,8 +2,8 @@
 
 const userModel = require('../models/user')();
 const validator = require('../utils/validator')();
-const _ = require('lodash');
 const bcrypt = require('bcrypt-nodejs');
+const _ = require('lodash');
 
 module.exports = () => {
 
@@ -160,6 +160,10 @@ module.exports = () => {
         resolve(userId);
       });
     });
+  };
+
+  this.getGraphqlSchema = function() {
+    return userModel.getGraphqlSchema();
   };
 
   function __validator(pattern, param, label) {

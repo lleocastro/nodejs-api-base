@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
+const graphql = require('graphql')
 
 const userSchema = new mongoose.Schema({
   first_name: {type: String, required: true},
@@ -10,6 +11,44 @@ const userSchema = new mongoose.Schema({
   password: {type: String, required: true},
   created_at: {type: Date, default: new Date()},
   updated_at: {type: Date, default: new Date()}
+});
+
+const graphqlSchema = new graphql.GraphQLSchema({
+  query: new graphql.GraphQLObjectType({
+    name: 'Query',
+    fields: {
+      user: {
+        type: new graphql.GraphQLObjectType({
+          name: 'User',
+          fields: {
+            id: {type: new graphql.GraphQLNonNull(graphql.GraphQLString)},
+            first_name: {type: graphql.GraphQLString},
+            last_name: {type: graphql.GraphQLString},
+            email: {type: graphql.GraphQLString}
+          }
+        }),
+        args: {
+          id: {type: graphql.GraphQLString},
+          email: {type: graphql.GraphQLString}
+        },
+        resolve: function (_ , args) {
+          let user = new Promise((resolve, reject) => {
+            mongoose.model('User', userSchema).find({_id: {$eq: args.id}}, (err, docs) => {
+              if (docs && docs[0]) {
+                resolve(docs[0]);
+              } else {
+                reject(err);
+              }
+            });
+          });
+
+          return user.then((resp) => {
+            return resp;
+          });
+        }
+      }
+    }
+  })
 });
 
 module.exports = () => {
@@ -56,6 +95,10 @@ module.exports = () => {
     User.remove({_id: {$eq: userId}}, (err) => callback(err));
     return userId;
   };
-  
+
+  this.getGraphqlSchema = () => {
+    return graphqlSchema;
+  }
+
   return this;
 }

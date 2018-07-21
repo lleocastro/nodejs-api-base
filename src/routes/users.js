@@ -1,8 +1,20 @@
 const httpUtils = require('../utils/http')();
 const userController = require('../controllers/user')();
+const graphqlHTTP = require('express-graphql');
 const auth = require('../config/auth')();
 
 module.exports = (app) => {
+
+  // *** GraphQL Routes *** //
+
+  app.use('/api/v1/user', graphqlHTTP({
+    schema: userController.getGraphqlSchema(), 
+    pretty: true
+  }));
+
+
+
+  // *** Common Routes *** //
 
   app.get('/api/v1/users', auth.authenticate(), (req, res) => {
     userController.getAll()
