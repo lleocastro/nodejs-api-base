@@ -7,7 +7,7 @@ module.exports = (app) => {
 
   // *** GraphQL Routes *** //
 
-  app.use('/api/v1/user', graphqlHTTP({
+  app.use('/api/v1/user', auth.authenticate(), graphqlHTTP({
     schema: userController.getGraphqlSchema(), 
     pretty: true
   }));
