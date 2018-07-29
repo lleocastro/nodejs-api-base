@@ -1,39 +1,64 @@
 version: '3.1'
+
+networks:
+  db:
+  web:
+
 services:
 
-  # db:
-  #   build:
-  #    context: ./dockerfiles
-  #    dockerfile: db.Dockerfile
-  #   command: bash -c "mongod"
-  #   restart: always
-  #   # environment:
-  #   #   MONGO_INITDB_ROOT_USERNAME: root
-  #   #   MONGO_INITDB_ROOT_PASSWORD: example
-  #   # volumes:
-  #   #   - /home/leo/Workspace/volumes/mongodb/db:data/db
-  #   ports:
-  #     - 27017:27017
+  database:
+    image: mongo:4.1
+    restart: always
+    container_name: database
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - /home/leo/Workspace/volumes/mongodb/db:/data/db
+    networks:
+      - db
+    # ports:
+    #   - 27017:27017
 
-  app:
+  api:
     build:
      context: ./dockerfiles
      dockerfile: api.Dockerfile
-    # command: bash -c "npm install --no-cache && node /var/www/api/src/public/index.js"
+    container_name: api
+    volumes:
+      - ./:/var/www/api/
     working_dir: /var/www/api/
-    command: bash -c "chmod +x ./init.sh && /var/www/api/init.sh"
-    ports:
-      - 3000:3000
+    command: bash -c "chmod +x /var/www/api/init.sh && /var/www/api/init.sh"
+    # ports:
+    #   - 3000:3000
     # env_file: '.env'
     environment:
       - APP_KEY=ZGIzZDk2ODMtMjBmNC0xMDhiLTkzMTYtYzc5NTY1YjdjNzg4ZmYxND
-      - DB_HOST=localhost
+      - DB_HOST=database
       - DB_PORT=27017
-      - DB_NAME=__test
+      - DB_NAME=_test
       - DB_DRIVER=mongodb
       # - DB_USER=null
       # - DB_PASS=null
-    # links:
-    #   - db
-    # depends_on:
-    #   - db
+    networks:
+      - db
+      - web
+    links:
+      - database
+    depends_on:
+      - database
+
+  webserver:
+    image: nginx:1.13
+    container_name: webserver
+    volumes:
+      - /home/leo/Workspace/volumes/nginx/html:/var/www/html
+      # Configuração para o proxy reveso
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - web
+    ports:
+      - 80:80
+    depends_on:
+      - api
+
