@@ -1,14 +1,39 @@
-version: '2'
+version: '3.1'
 services:
-  app:
-    image: library/debian
-    working_dir: /var/www
-    environment:
-      - APP_KEY=null
-      - DB_HOST=null
-      - DB_PORT=27017
-      - DB_NAME=null
-      - DB_DRIVER=null
-      - DB_USER=null
-      - DB_PASS=null
 
+  # db:
+  #   build:
+  #    context: ./dockerfiles
+  #    dockerfile: db.Dockerfile
+  #   command: bash -c "mongod"
+  #   restart: always
+  #   # environment:
+  #   #   MONGO_INITDB_ROOT_USERNAME: root
+  #   #   MONGO_INITDB_ROOT_PASSWORD: example
+  #   # volumes:
+  #   #   - /home/leo/Workspace/volumes/mongodb/db:data/db
+  #   ports:
+  #     - 27017:27017
+
+  app:
+    build:
+     context: ./dockerfiles
+     dockerfile: api.Dockerfile
+    # command: bash -c "npm install --no-cache && node /var/www/api/src/public/index.js"
+    working_dir: /var/www/api/
+    command: bash -c "chmod +x ./init.sh && /var/www/api/init.sh"
+    ports:
+      - 3000:3000
+    # env_file: '.env'
+    environment:
+      - APP_KEY=ZGIzZDk2ODMtMjBmNC0xMDhiLTkzMTYtYzc5NTY1YjdjNzg4ZmYxND
+      - DB_HOST=localhost
+      - DB_PORT=27017
+      - DB_NAME=__test
+      - DB_DRIVER=mongodb
+      # - DB_USER=null
+      # - DB_PASS=null
+    # links:
+    #   - db
+    # depends_on:
+    #   - db
