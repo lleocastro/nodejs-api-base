@@ -22,7 +22,7 @@ services:
 
   api:
     build:
-     context: ./dockerfiles
+     context: .
      dockerfile: api.Dockerfile
     container_name: api
     volumes:

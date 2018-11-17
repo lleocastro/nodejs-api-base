@@ -11,8 +11,7 @@ const validator  = require('express-validator');
 const consign = require('consign');
 const helmet = require('helmet');
 
-// Node Core
-const evt = require('events').EventEmitter();
+// const evt = require('events').EventEmitter();
 
 // MongoDB Connection
 require('./database')();
@@ -21,7 +20,7 @@ module.exports = () => {
   let app = express();
 
   // Loading external modules
-  app.use(bodyParser.urlencoded({extended: true}));
+  // app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
   app.use(auth.initialize());
   app.use(validator());
